@@ -113,6 +113,7 @@ const Register = () => {
       email: "",
       password: "",
       dateOfBirth: "",
+      role: "user",
       address: {
         street: "",
         city: "",
