@@ -107,7 +107,7 @@ const BookCard = ({ book, isLoading = false }) => {
           <div className="flex items-center">
             <FiStar className="text-yellow-400 mr-1" />
             <span className="text-sm text-gray-600 dark:text-gray-300">
-              {book.ratings?.toFixed(1) || "0.0"} ({book.numOfReviews || 0})
+              {book.ratings?.toFixed(1) || "0.0"} ({book.reviews.length || 0})
             </span>
           </div>
           <span className="text-xs font-medium text-gray-500 dark:text-gray-400">

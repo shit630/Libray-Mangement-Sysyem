@@ -12,11 +12,11 @@ const UserDetails = () => {
   const dispatch = useDispatch();
   const { isLoading, currentUser, error } = useSelector((state) => state.users);
 
+  // console.log(currentUser.borrowedBooks);
   useEffect(() => {
     (async () => {
       try {
         await dispatch(fetchUser(id)).unwrap();
-        console.log(currentUser);
       } catch (error) {
         toast.error("Failed to load user details");
         navigate("/admin/users");
@@ -88,13 +88,14 @@ const UserDetails = () => {
           </div>
         </div>
         {/* Favorite Books */}
-        {currentUser.favoriteBooks?.length > 0 && (
+        {/* {currentUser.favoriteBooks?.length > 0 && (
           <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
-            {currentUser.favoriteBooks.map((book) => (
+            {currentUser.favoriteBooks.map((book, i) => (
               <div
-                key={book._id}
+                key={i}
                 className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden"
               >
+                {console.log(book)}
                 <img
                   src={book.image?.url || "/placeholder-book.png"}
                   alt={book.title}
@@ -114,75 +115,7 @@ const UserDetails = () => {
               </div>
             ))}
           </div>
-        )}
-
-        {currentUser.borrowedBooks?.length > 0 && (
-          <div className="mt-6">
-            <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-2">
-              Borrowed Books
-            </h3>
-            <ul className="space-y-3">
-              {currentUser.borrowedBooks.map((borrow, idx) => {
-                <li
-                  key={idx}
-                  className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg flex items-start space-x-4 shadow-sm"
-                >
-                  {/* Book Image */}
-                  {borrow.book?.image?.url && (
-                    <img
-                      src={borrow.book.image.url}
-                      alt={borrow.book.title}
-                      className="w-16 h-20 object-cover rounded-md shadow"
-                    />
-                  )}
-
-                  {/* Book Info */}
-                  <div className="flex-1">
-                    <p className="text-lg font-semibold text-gray-900 dark:text-white">
-                      {borrow.book?.title || "Unknown Title"}
-                    </p>
-                    <p className="text-sm text-gray-600 dark:text-gray-300">
-                      by {borrow.book?.author || "Unknown Author"}
-                    </p>
-                    {borrow.book?.ratings && (
-                      <p className="text-sm text-yellow-500">
-                        ⭐ {borrow.book.ratings.toFixed(1)}
-                      </p>
-                    )}
-
-                    {/* Borrow Info */}
-                    <div className="mt-2 space-y-1 text-sm text-gray-600 dark:text-gray-300">
-                      <p>
-                        <span className="font-semibold">Borrowed:</span>{" "}
-                        {new Date(borrow.borrowedDate).toLocaleDateString()}
-                      </p>
-                      <p>
-                        <span className="font-semibold">Return:</span>{" "}
-                        {borrow.returnDate
-                          ? new Date(borrow.returnDate).toLocaleDateString()
-                          : "N/A"}
-                      </p>
-                      <p>
-                        <span className="font-semibold">Status:</span>{" "}
-                        <span
-                          className={`px-2 py-1 rounded text-xs font-medium ${
-                            borrow.status === "Returned"
-                              ? "bg-green-100 text-green-800"
-                              : borrow.status === "Overdue"
-                              ? "bg-red-100 text-red-800"
-                              : "bg-yellow-100 text-yellow-800"
-                          }`}
-                        >
-                          {borrow.status}
-                        </span>
-                      </p>
-                    </div>
-                  </div>
-                </li>;
-              })}
-            </ul>
-          </div>
-        )}
+        )} */}
       </div>
     </div>
   );

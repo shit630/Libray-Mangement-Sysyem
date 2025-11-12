@@ -49,6 +49,7 @@ const ManageUsers = () => {
   // Fetch userss whenever filters/search/page change
   useEffect(() => {
     let isMounted = true;
+    const scrollPosition = window.scrollY;
     (async () => {
       try {
         // ensure page is at least 1
@@ -65,6 +66,9 @@ const ManageUsers = () => {
         if (!isMounted) return;
 
         setIsFetchingMore(false);
+        requestAnimationFrame(() => {
+          window.scrollTo({ top: scrollPosition, behavior: "instant" });
+        });
       } catch (error) {
         if (!isMounted) return;
         setIsFetchingMore(false);
@@ -99,7 +103,7 @@ const ManageUsers = () => {
     };
 
     // throttle interval 500ms (adjust as needed)
-    return throttle(fn, 500);
+    return throttle(fn, 300);
   }, []);
 
   useEffect(() => {
@@ -127,7 +131,7 @@ const ManageUsers = () => {
     return () => {
       debouncedSetSearch.cancel();
     };
-  }, [debouncedSetSearch]);
+  }, [debouncedSearch]);
 
   // Handlers
   const handleSearch = (e) => {

@@ -275,15 +275,21 @@ const forgotPassword = async (req, res, next) => {
 
     try {
       // Send email
-      await sendEmail({
-        email: user.email,
-        subject: "Password Reset Request - LibraryHub",
-        html: emailTemplates.passwordReset(resetUrl, user),
-      });
+      await Promise.race([
+        sendEmail({
+          email: user.email,
+          subject: "Password Reset Request - LibraryHub",
+          html: emailTemplates.passwordReset(resetUrl, user),
+        }),
+        new Promise((_, reject) =>
+          setTimeout(() => reject(new Error("Email timeout")), 15000)
+        ),
+      ]);
 
       res.status(200).json({ success: true, message: "Email sent" });
     } catch (error) {
       //  Clear the reset token if email fails
+      console.error("Email sending failed:", error);
       user.clearResetToken();
       await user.save({ validateBeforeSave: false });
 
@@ -293,7 +299,11 @@ const forgotPassword = async (req, res, next) => {
       });
     }
   } catch (error) {
-    next(error);
+    console.error("Forgot password error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error. Please try again later.",
+    });
   }
 };
 
